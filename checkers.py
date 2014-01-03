@@ -2,8 +2,8 @@ class Checker:
     """The checkers piece."""
 
     # constants (Checker._____)
-    PLAYER_ONE = 0
-    PLAYER_TWO = 1
+    PLAYER_ONE = 'one'
+    PLAYER_TWO = 'two'
 
     # constructor
     def __init__(self, player):
@@ -52,6 +52,26 @@ class Board:
         s += '  +-+-+-+-+-+-+-+-+'
         return s
 
+    def move(self, player, from_coords, to_coords):
+        from_y, from_x = 'ABCDEFGH'.index(from_coords[0]), int(from_coords[1])
+        to_y, to_x = 'ABCDEFGH'.index(to_coords[0]), int(to_coords[1])
+        if self.data[from_x][from_y] is None:
+            return 'There is no piece there!'
+        elif self.data[from_x][from_y].player == player:
+            if abs(from_x - to_x) == 1 and abs(from_y - to_y) == 1:
+                self.data[to_x][to_y], self.data[from_x][from_y] = self.data[from_x][from_y], None
+                return 'Moved'
+            else:
+                return 'That\'s not a diagonal move!'
+        else:
+            return 'That\'s not your piece!'
+
+def ask_for_move(player, board):
+    move = input('Player %s, enter move (for example, A0 B1 to move the piece at A0 to B1): ' % player).split(' ')
+    board.move(player, move[0], move[1])
+
 if __name__ == '__main__':
     board = Board()
+    print(board.render())
+    ask_for_move(Checker.PLAYER_ONE, board)
     print(board.render())
