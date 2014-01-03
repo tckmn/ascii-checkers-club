@@ -59,6 +59,11 @@ class Board:
         Returns a string (error message) if move failed, None otherwise.
         TODO jumping and capturing
         """
+        
+        while not is_coord(from_coords) or not is_coord(to_coords):
+            new_move = input('Player %s, enter move (for example, A0 B1 to move the piece at A0 to B1): ' % player).split(' ')
+            from_coords, to_coords = new_move[0], new_move[1]
+        
         from_y, from_x = 'ABCDEFGH'.index(from_coords[0]), int(from_coords[1])
         to_y, to_x = 'ABCDEFGH'.index(to_coords[0]), int(to_coords[1])
 
@@ -81,6 +86,9 @@ class Board:
         # move is ok! do it
         self.data[to_x][to_y], self.data[from_x][from_y] = from_piece, None
         return None
+
+def is_coord(coord):
+    return coord[0] in 'ABCDEFG' and coord[1] in '01234567'
 
 def ask_for_move(player, board):
     """Ask the player for a move, and move there, given a board."""
