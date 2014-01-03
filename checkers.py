@@ -36,6 +36,13 @@ class Board:
         """Returns an amount of empty rows."""
         return [[None] * 8 for _ in range(count)]
 
+    def render(self):
+        """Draws the board."""
+        for row in self.data:
+            print('+-+-+-+-+-+-+-+-+')
+            print('|{}|'.format('|'.join([' ' if i is None else 'o' if i.player == Checker.PLAYER_ONE else 'x' for i in row])))
+        print('+-+-+-+-+-+-+-+-+')
+
 if __name__ == '__main__':
     board = Board()
-    print(board.data)
+    board.render()
