@@ -99,7 +99,7 @@ class Board:
 
 def is_coord(coord):
     """Is this string a valid coordinate?"""
-    return coord[0] in 'ABCDEFG' and coord[1] in '01234567'
+    return coord[0] in 'ABCDEFGH' and coord[1] in '01234567'
 
 def valid_move(move):
     """Is this a valid move (list of two coordinates)?"""
