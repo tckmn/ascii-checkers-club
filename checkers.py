@@ -59,8 +59,11 @@ class Board:
             return 'There is no piece there!'
         elif self.data[from_x][from_y].player == player:
             if abs(from_x - to_x) == 1 and abs(from_y - to_y) == 1:
-                self.data[to_x][to_y], self.data[from_x][from_y] = self.data[from_x][from_y], None
-                return 'Moved'
+                if self.data[to_x][to_y] is None:
+                    return 'There\'s already a piece in that space!'
+                else:
+                    self.data[to_x][to_y], self.data[from_x][from_y] = self.data[from_x][from_y], None
+                    return None
             else:
                 return 'That\'s not a diagonal move!'
         else:
@@ -68,7 +71,10 @@ class Board:
 
 def ask_for_move(player, board):
     move = input('Player %s, enter move (for example, A0 B1 to move the piece at A0 to B1): ' % player).split(' ')
-    board.move(player, move[0], move[1])
+    message = board.move(player, move[0], move[1])
+    while message is not None:
+        move = input(message + ' Please try again: ').split(' ')
+        message = board.move(player, move[0], move[1])
 
 if __name__ == '__main__':
     board = Board()
