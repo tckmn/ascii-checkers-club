@@ -17,7 +17,7 @@ class Checker:
         if piece is None: return ' '
         char = 'o' if piece.player == Checker.PLAYER_ONE else 'x'
         return char.upper() if piece.king else char
-    
+
 class Board:
     """The board on which the checkers lie."""
 
@@ -62,10 +62,8 @@ class Board:
         from_y, from_x = 'ABCDEFGH'.index(from_coords[0]), int(from_coords[1])
         to_y, to_x = 'ABCDEFGH'.index(to_coords[0]), int(to_coords[1])
 
-
         from_piece = self.data[from_x][from_y]
         to_piece = self.data[to_x][to_y]
-
 
         # first check to see if there's a piece in `from`
         if from_piece is None: return 'There is no piece there!'
@@ -77,7 +75,6 @@ class Board:
         dx = to_x - from_x
         forwards = dx > 0 if from_piece.player == Checker.PLAYER_ONE else dx < 0
         if not forwards and not from_piece.king: return 'You can\'t move backwards!'
-
 
         # check to see if the move is diagonal
         adx, ady = abs(from_x - to_x), abs(from_y - to_y)
@@ -106,17 +103,14 @@ def is_coord(coord):
 
 def valid_move(move):
     """Is this a valid move (list of two coordinates)?"""
+
+    # check to see all the list elements are valid coordinates (and there's at least one)
     if len(move) > 1:
         for i in range(0, len(move)):
             if not (len(move[i]) == 2 and len(move[1]) == 2 and is_coord(move[0]) and is_coord(move[1])):
                 return False
     else:
         return False
-
-    if len(move) > 2:
-        for i in range(1, len(move)):
-            if int(move[0][1])%2 is not int(move[i][1])%2:
-                return False
 
     return True
 
@@ -135,7 +129,8 @@ def input_and_move(player, board):
         print(message)
         move = ask_for_move(player)
         message = board.move(player, move[0], move[1])
-    
+
+    # handle multiple jumps
     for i in range(2, len(move)):
         if message is None:
             message = board.move(player, move[i-1], move[i])
