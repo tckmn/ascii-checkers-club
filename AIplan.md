@@ -64,16 +64,18 @@ Note: it must keep track of whose turn it is (this isn't shown as an argument, b
 Next, there is the `EvalGameState()` function.  This is the thing that drives the AI.
 Don't get it wrong, or else the AI won't play the game well.
 
+[Here is a picture of the values of each square for the AI.](http://tim.hibal.org/blog/wp-content/uploads/2010/02/board-position-value.png)
+
 Here is my proposed function, written in pseudocode:
 
-    EvalGameState (game) {
+    EvalGameState (game):
       if (plsyer 1 number of pieces == 0)  #this assumes player 1 is human
         return 1337                        #large value so that victory/defeat outweighs anything
       if (player 2 number of pieces == 0)
         return -1337
       totalscore = 0
       ForEach piece {
-        # this implements that picture I kept posting
+        # this implements that picture I referenced earlier
         piecescore = max(abs(xpos - 3.5), abs(ypos - 3.5)) + .5  #assumes x and y are measured from 0 to 7
         if (piece is promoted)
           piecescore = 5
