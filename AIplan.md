@@ -74,7 +74,7 @@ Here is my proposed function, written in pseudocode:
       if (player 2 number of pieces == 0)
         return -1337
       totalscore = 0
-      ForEach piece {
+      ForEach piece:
         # this implements that picture I referenced earlier
         piecescore = max(abs(xpos - 3.5), abs(ypos - 3.5)) + .5  #assumes x and y are measured from 0 to 7
         if (piece is promoted)
@@ -84,3 +84,26 @@ Here is my proposed function, written in pseudocode:
         totalscore += piecescore
       return totalscore
     
+- OddLlama - and here is that pseudocode vageuly translated into Python:
+
+    def eval_game_state(board):
+        if (board.number_of_pieces(Checker.PLAYER_ONE) == 0):  #this assumes player 1 is human
+            return 1337                        #large value so that victory/defeat outweighs anything
+        if (board.number_of_pieces(Checker.PLAYER_TWO) == 0)
+            return -1337
+        totalscore = 0
+        for x in range(7):
+            for y in range(7):
+                if board.data[x][y] is not None:
+                    piece = board.data[x][y]
+                    # this implements that picture I referenced earlier
+                    piecescore = round(max(abs(x - 3.5), abs(y - 3.5)) + .5)
+                    if (piece.king): piecescore = 5
+                    if (piece.player == Checker.PLAYER_ONE): piecescore *= -1
+                    totalscore += piecescore
+        return totalscore
+      
+And in the `Board` class:
+      
+    def number_of_pieces(self, player):
+        # count number of pieces
