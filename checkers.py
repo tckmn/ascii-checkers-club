@@ -17,18 +17,18 @@ class Board:
     def __init__(self):
         """Constructs a new, normal set up board."""
         self.data = []
-        self.data.append(Board.start_rows(Checker.PLAYER_ONE))
-        self.data.append(Board.empty_rows(2))
-        self.data.append(Board.start_rows(Checker.PLAYER_TWO))
+        self.data.extend(Board.start_rows(Checker.PLAYER_ONE))
+        self.data.extend(Board.empty_rows(2))
+        self.data.extend(Board.start_rows(Checker.PLAYER_TWO))
 
     @staticmethod
     def start_rows(player):
         """The configuration of pieces that the game starts with."""
         r1, r2, r3 = [], [], []
         for _ in range(4):
-            r1.append([None, Checker(player)])
-            r2.append([Checker(player), None])
-            r3.append([None, Checker(player)])
+            r1.extend([None, Checker(player)])
+            r2.extend([Checker(player), None])
+            r3.extend([None, Checker(player)])
         return [r1, r2, r3]
 
     @staticmethod
