@@ -73,8 +73,8 @@ class Board:
         # check to see if `to` is an open space
         if to_piece is not None: return 'There\'s already a piece in that space!'
         # check to see if piece is moving forwards
-        dy = to_y - from_y
-        forwards = dy > 0 if from_piece.player == Checker.PLAYER_ONE else dy < 0
+        dx = to_x - from_x
+        forwards = dx > 0 if from_piece.player == Checker.PLAYER_ONE else dx < 0
         if not forwards and not from_piece.king: return 'You can\'t move backwards!'
 
         # check to see if the move is diagonal
