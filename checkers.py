@@ -13,6 +13,7 @@ class Checker:
 
     @staticmethod
     def character(piece):
+        """Returns the character for a piece (' ' (a space), x, o, X, or O)."""
         if piece is None: return ' '
         char = 'o' if piece.player == Checker.PLAYER_ONE else 'x'
         return char.upper() if piece.king else char
@@ -53,6 +54,11 @@ class Board:
         return s
 
     def move(self, player, from_coords, to_coords):
+        """
+        Given a player that is moving, and A0-style coordinates for from and to, moves the piece.
+        Returns a string (error message) if move failed, None otherwise.
+        TODO jumping and capturing
+        """
         from_y, from_x = 'ABCDEFGH'.index(from_coords[0]), int(from_coords[1])
         to_y, to_x = 'ABCDEFGH'.index(to_coords[0]), int(to_coords[1])
         if self.data[from_x][from_y] is None:
@@ -70,6 +76,7 @@ class Board:
             return 'That\'s not your piece!'
 
 def ask_for_move(player, board):
+    """Ask the player for a move, and move there, given a board."""
     move = input('Player %s, enter move (for example, A0 B1 to move the piece at A0 to B1): ' % player).split(' ')
     message = board.move(player, move[0], move[1])
     while message is not None:
@@ -77,6 +84,11 @@ def ask_for_move(player, board):
         message = board.move(player, move[0], move[1])
 
 if __name__ == '__main__':
+    players = input('Enter number of players (1 or 2): ')
+    while players not in ['1', '2']:
+        players = input('Invalid number of players. Try again: ')
+    print('Thank you for your input, it will now be ignored (2 player isn\'t implemented yet)')
+
     board = Board()
     print(board.render())
     ask_for_move(Checker.PLAYER_ONE, board)
