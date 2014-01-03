@@ -66,10 +66,10 @@ class Board:
         elif self.data[from_x][from_y].player == player:
             if abs(from_x - to_x) == 1 and abs(from_y - to_y) == 1:
                 if self.data[to_x][to_y] is None:
-                    return 'There\'s already a piece in that space!'
-                else:
                     self.data[to_x][to_y], self.data[from_x][from_y] = self.data[from_x][from_y], None
                     return None
+                else:
+                    return 'There\'s already a piece in that space!'
             else:
                 return 'That\'s not a diagonal move!'
         else:
