@@ -87,9 +87,13 @@ if __name__ == '__main__':
     players = input('Enter number of players (1 or 2): ')
     while players not in ['1', '2']:
         players = input('Invalid number of players. Try again: ')
-    print('Thank you for your input, it will now be ignored (2 player isn\'t implemented yet)')
 
-    board = Board()
-    print(board.render())
-    ask_for_move(Checker.PLAYER_ONE, board)
-    print(board.render())
+    if players == '1':
+        print('AI not implemented yet. So... I\'ll just... do nothing')
+    else:
+        board = Board()
+        while True:
+            print(board.render())
+            ask_for_move(Checker.PLAYER_ONE, board)
+            print(board.render())
+            ask_for_move(Checker.PLAYER_TWO, board)
