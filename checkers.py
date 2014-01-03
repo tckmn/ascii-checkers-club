@@ -157,7 +157,9 @@ def input_and_move(player, board):
             message = board.move(player, move[i-1], move[i])
         else:
             print(message[1])
-            return
+            break
+
+    return board
 
 def eval_game_state(board):
     # we're assuming player 1 is human and player 2 is AI.
@@ -234,6 +236,6 @@ if __name__ == '__main__':
         board = Board()
         while True:
             print(board.render())
-            input_and_move(Checker.PLAYER_ONE, board)
+            board = input_and_move(Checker.PLAYER_ONE, board)
             print(board.render())
-            input_and_move(Checker.PLAYER_TWO, board)
+            board = input_and_move(Checker.PLAYER_TWO, board)
