@@ -57,7 +57,7 @@ class Board:
         """
         Given a player that is moving, and A0-style coordinates for from and to, moves the piece.
         Returns a string (error message) if move failed, None otherwise.
-        TODO jumping and capturing
+        TODO keep count of captured pieces
         """
         from_y, from_x = 'ABCDEFGH'.index(from_coords[0]), int(from_coords[1])
         to_y, to_x = 'ABCDEFGH'.index(to_coords[0]), int(to_coords[1])
@@ -69,9 +69,23 @@ class Board:
                     return 'There\'s already a piece in that space!'
                 else:
                     self.data[to_x][to_y], self.data[from_x][from_y] = self.data[from_x][from_y], None
-                    return None
+                    return
+            elif abs(from_x - to_x) == 2 and abs(from_y - to_y) == 2:
+                jumped_x, jumped_y = (from_x + to_x)/2, (from_y + to_y)/2
+                jumped_piece = self.data[jumped_x][jumped_y]
+                if jumped_piece is None:
+                    return 'You can\'t jump over nothing!'
+                elif jumped_piece.player == player:
+                    self.data[to_x][to_y], self.data[from_x][from_y] = self.data[from_x][from_y], None
+                    return
+                else:
+                    self.data[to_x][to_y], self.data[from_x][from_y] = self.data[from_x][from_y], None
+                    self.data[jumped_x][jumped_y] = None
+                    return
             else:
                 return 'That\'s not a diagonal move!'
+        elif:
+            return 'There\'s already a piece there!'
         else:
             return 'That\'s not your piece!'
 
