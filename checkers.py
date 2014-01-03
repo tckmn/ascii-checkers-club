@@ -9,6 +9,13 @@ class Checker:
     def __init__(self, player):
         """Constructs a new checkers piece."""
         self.player = player
+        self.king = False
+
+    @staticmethod
+    def character(piece):
+        if piece is None: return ' '
+        char = 'o' if piece.player == Checker.PLAYER_ONE else 'x'
+        return char.upper() if piece.king else char
 
 class Board:
     """The board on which the checkers lie."""
@@ -37,12 +44,14 @@ class Board:
         return [[None] * 8 for _ in range(count)]
 
     def render(self):
-        """Draws the board."""
+        """Returns an ASCII representation of the board."""
+        s = ''
         for row in self.data:
-            print('+-+-+-+-+-+-+-+-+')
-            print('|{}|'.format('|'.join([' ' if i is None else 'o' if i.player == Checker.PLAYER_ONE else 'x' for i in row])))
-        print('+-+-+-+-+-+-+-+-+')
+            s += '+-+-+-+-+-+-+-+-+\n'
+            s += '|%s|\n' % '|'.join([Checker.character(p) for p in row])
+        s += '+-+-+-+-+-+-+-+-+'
+        return s
 
 if __name__ == '__main__':
     board = Board()
-    board.render()
+    print(board.render())
