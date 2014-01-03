@@ -60,6 +60,11 @@ class Board:
         TODO jumping and capturing
         TODO keep count of captured pieces
         """
+        
+        while not is_coord(from_coords) or not is_coord(to_coords):
+            new_move = input('Player %s, enter move (for example, A0 B1 to move the piece at A0 to B1): ' % player).split(' ')
+            from_coords, to_coords = new_move[0], new_move[1]
+        
         from_y, from_x = 'ABCDEFGH'.index(from_coords[0]), int(from_coords[1])
         to_y, to_x = 'ABCDEFGH'.index(to_coords[0]), int(to_coords[1])
 
@@ -95,6 +100,9 @@ class Board:
                 return None
         else:
             return 'That\'s not a diagonal move!'
+
+def is_coord(coord):
+    return coord[0] in 'ABCDEFG' and coord[1] in '01234567'
 
 def ask_for_move(player, board):
     """Ask the player for a move, and move there, given a board."""
