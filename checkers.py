@@ -99,23 +99,24 @@ class Board:
 def is_coord(coord):
     return coord[0] in 'ABCDEFG' and coord[1] in '01234567'
 
-def is_valid(move):
+def valid_move(move):
     return len(move) == 2 and len(move[0]) == 2 and len(move[1]) == 2 and is_coord(move[0]) and is_coord(move[1])
 
-def input_move(player):
+def ask_for_move(player):
+    """The function that requests that the player enter a move."""
     move = []
-    while not is_valid(move):
-        move = input('Player %s, enter move (for example, A0 B1 to move the piece at A0 to B1): ' % player).split(' ')
+    while not valid_move(move):
+        move = input('Player %s, enter move (ex. A0 B1 to move piece at A0 to B1): ' % player).split(' ')
     return move
 
-def ask_for_move(player, board):
+def input_and_move(player, board):
     """Ask the player for a move, and move there, given a board."""
-    move = input_move(player)
+    move = ask_for_move(player)
     message = board.move(player, move[0], move[1])
-    while message != None:
+    while message is not None:
         print(message)
+        move = ask_for_move(player)
         message = board.move(player, move[0], move[1])
-        move = input_move(player)
 
 if __name__ == '__main__':
     players = input('Enter number of players (1 or 2): ')
@@ -128,6 +129,6 @@ if __name__ == '__main__':
         board = Board()
         while True:
             print(board.render())
-            ask_for_move(Checker.PLAYER_ONE, board)
+            input_and_move(Checker.PLAYER_ONE, board)
             print(board.render())
-            ask_for_move(Checker.PLAYER_TWO, board)
+            input_and_move(Checker.PLAYER_TWO, board)
