@@ -161,8 +161,8 @@ def eval_game_state(board):
         return -1337
 
     totalscore = 0
-    for x in range(7):
-        for y in range(7):
+    for x in range(8):
+        for y in range(8):
             if board.data[x][y] is not None:
                 piece = board.data[x][y]
                 # score the square
