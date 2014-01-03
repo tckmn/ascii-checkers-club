@@ -160,9 +160,9 @@ def input_and_move(player, board):
 
     # handle multiple jumps
     for i in range(2, len(move)):
+        message = board.move(player, move[i-1], move[i]) 
         if message[0]:
             board = message[1]
-            message = board.move(player, move[i-1], move[i])
         else:
             print(message[1])
             break
