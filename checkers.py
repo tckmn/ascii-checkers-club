@@ -45,11 +45,11 @@ class Board:
 
     def render(self):
         """Returns an ASCII representation of the board."""
-        s = ''
-        for row in self.data:
-            s += '+-+-+-+-+-+-+-+-+\n'
-            s += '|%s|\n' % '|'.join([Checker.character(p) for p in row])
-        s += '+-+-+-+-+-+-+-+-+'
+        s = '   A B C D E F G H \n'
+        for n, row in enumerate(self.data):
+            s += '  +-+-+-+-+-+-+-+-+\n'
+            s += '%i |%s|\n' % (n, '|'.join([Checker.character(p) for p in row]))
+        s += '  +-+-+-+-+-+-+-+-+'
         return s
 
 if __name__ == '__main__':
