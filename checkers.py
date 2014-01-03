@@ -57,7 +57,6 @@ class Board:
         """
         Given a player that is moving, and A0-style coordinates for from and to, moves the piece.
         Returns a string (error message) if move failed, None otherwise.
-        TODO jumping and capturing
         TODO keep count of captured pieces
         """
         from_y, from_x = 'ABCDEFGH'.index(from_coords[0]), int(from_coords[1])
@@ -81,9 +80,10 @@ class Board:
         adx, ady = abs(from_x - to_x), abs(from_y - to_y)
         if adx == ady == 1:
             self.data[to_x][to_y], self.data[from_x][from_y] = from_piece, None
+            if to_x == 0 or to_x == 7: self.data[to_x][to_y].king = True
             return None
         elif adx == ady == 2:
-            jumped_x, jumped_y = (from_x + to_x)//2, (from_y + to_y)//2
+            jumped_x, jumped_y = (from_x + to_x) // 2, (from_y + to_y) // 2
             jumped_piece = self.data[jumped_x][jumped_y]
             if jumped_piece is None:
                 return 'You can\'t jump over nothing!'
@@ -92,14 +92,17 @@ class Board:
             else:
                 self.data[to_x][to_y], self.data[from_x][from_y] = self.data[from_x][from_y], None
                 self.data[jumped_x][jumped_y] = None
+                if to_x == 0 or to_x == 7: self.data[to_x][to_y].king = True
                 return None
         else:
             return 'That\'s not a diagonal move!'
 
 def is_coord(coord):
+    """Is this string a valid coordinate?"""
     return coord[0] in 'ABCDEFG' and coord[1] in '01234567'
 
 def valid_move(move):
+    """Is this a valid move (list of two coordinates)?"""
     return len(move) == 2 and len(move[0]) == 2 and len(move[1]) == 2 and is_coord(move[0]) and is_coord(move[1])
 
 def ask_for_move(player):
