@@ -51,7 +51,16 @@ class Board:
             s += '  +-+-+-+-+-+-+-+-+\n'
             s += '%i |%s|\n' % (n, '|'.join([Checker.character(p) for p in row]))
         s += '  +-+-+-+-+-+-+-+-+'
+        s += '\n' + str(eval_game_state(self)) # temporary
         return s
+
+    def number_of_pieces(self, player):
+        p_count = 0
+        for row in self.data:
+            for p in row:
+                if p is not None and p.player == player:
+                    p_count += 1
+        return p_count
 
     def move(self, player, from_coords, to_coords):
         """
@@ -143,6 +152,26 @@ def input_and_move(player, board):
         if message is not None:
             print(message)
             return
+
+def eval_game_state(board):
+    # we're assuming player 1 is human and player 2 is AI.
+    if (board.number_of_pieces(Checker.PLAYER_ONE) == 0):
+        return 1337 # large value so that victory/defeat outweighs anything
+    if (board.number_of_pieces(Checker.PLAYER_TWO) == 0):
+        return -1337
+
+    totalscore = 0
+    for x in range(7):
+        for y in range(7):
+            if board.data[x][y] is not None:
+                piece = board.data[x][y]
+                # score the square
+                piecescore = round(max(abs(x - 3.5), abs(y - 3.5)) + .5)
+                if (piece.king): piecescore = 5
+                if (piece.player == Checker.PLAYER_ONE): piecescore *= -1
+                totalscore += piecescore
+
+    return totalscore
 
 if __name__ == '__main__':
     players = input('Enter number of players (1 or 2): ')
