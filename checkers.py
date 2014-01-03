@@ -34,9 +34,9 @@ class Board:
         """The configuration of pieces that the game starts with."""
         r1, r2, r3 = [], [], []
         for _ in range(4):
-            r1.extend([None, Checker(player)])
-            r2.extend([Checker(player), None])
-            r3.extend([None, Checker(player)])
+            r1.extend([None, Checker(player)] if player == Checker.PLAYER_ONE else [Checker(player), None])
+            r2.extend([None, Checker(player)] if player == Checker.PLAYER_TWO else [Checker(player), None])
+            r3.extend([None, Checker(player)] if player == Checker.PLAYER_ONE else [Checker(player), None])
         return [r1, r2, r3]
 
     @staticmethod
