@@ -83,6 +83,8 @@ Here is my proposed function, written in pseudocode:
           piecescore *= -1
         totalscore += piecescore
       return totalscore
+      
+The basic idea is that the weight of non-promoted pieces depends on their position on the board.  Pieces either gaurding the back rows or advancing to the very top are worth more.  Also, the weight of promoted pieces does not depend on board position. This is to allow the endgame to function properly, otherwise the pieces will stick to the edges instead of going after the opponent.  It is important to note that large values are good for the AI.
     
 - OddLlama - and here is that pseudocode vageuly translated into Python:
 
