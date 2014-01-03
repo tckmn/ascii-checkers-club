@@ -61,19 +61,26 @@ class Board:
         """
         from_y, from_x = 'ABCDEFGH'.index(from_coords[0]), int(from_coords[1])
         to_y, to_x = 'ABCDEFGH'.index(to_coords[0]), int(to_coords[1])
-        if self.data[from_x][from_y] is None:
-            return 'There is no piece there!'
-        elif self.data[from_x][from_y].player == player:
-            if abs(from_x - to_x) == 1 and abs(from_y - to_y) == 1:
-                if self.data[to_x][to_y] is None:
-                    self.data[to_x][to_y], self.data[from_x][from_y] = self.data[from_x][from_y], None
-                    return None
-                else:
-                    return 'There\'s already a piece in that space!'
-            else:
-                return 'That\'s not a diagonal move!'
-        else:
-            return 'That\'s not your piece!'
+
+        from_piece = self.data[from_x][from_y]
+        to_piece = self.data[to_x][to_y]
+
+        # first check to see if there's a piece in `from`
+        if from_piece is None: return 'There is no piece there!'
+        # and check to see if it's that player's
+        if from_piece.player != player: return 'That\'s not your piece!'
+        # check to see if the move is diagonal
+        if abs(from_x - to_x) == 1 and abs(from_y - to_y) != 1: return 'That\'s not a diagonal move!'
+        # check to see if `to` is an open space
+        if to_piece is not None: return 'There\'s already a piece in that space!'
+        # check to see if piece is moving forwards
+        dy = to_y - from_y
+        forwards = dy > 0 if from_piece.player == Checker.PLAYER_ONE else dy < 0
+        if not forwards and not from_piece.king: return 'You can\'t move backwards!'
+
+        # move is ok! do it
+        self.data[to_x][to_y], self.data[from_x][from_y] = from_piece, None
+        return None
 
 def ask_for_move(player, board):
     """Ask the player for a move, and move there, given a board."""
