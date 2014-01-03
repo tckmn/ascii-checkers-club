@@ -112,6 +112,12 @@ def valid_move(move):
     else:
         return False
 
+    # make sure they're all jumps
+    if len(move) > 2:
+        for i in range(1, len(move)):
+            if int(move[0][1]) % 2 is not int(move[i][1]) % 2:
+                return False
+
     return True
 
 def ask_for_move(player):
