@@ -60,11 +60,6 @@ class Board:
         TODO jumping and capturing
         TODO keep count of captured pieces
         """
-        
-        while not is_coord(from_coords) or not is_coord(to_coords):
-            new_move = input('Player %s, enter move (for example, A0 B1 to move the piece at A0 to B1): ' % player).split(' ')
-            from_coords, to_coords = new_move[0], new_move[1]
-        
         from_y, from_x = 'ABCDEFGH'.index(from_coords[0]), int(from_coords[1])
         to_y, to_x = 'ABCDEFGH'.index(to_coords[0]), int(to_coords[1])
 
@@ -104,13 +99,23 @@ class Board:
 def is_coord(coord):
     return coord[0] in 'ABCDEFG' and coord[1] in '01234567'
 
+def is_valid(move):
+    return len(move) == 2 and len(move[0]) == 2 and len(move[1]) == 2 and is_coord(move[0]) and is_coord(move[1])
+
+def input_move(player):
+    move = []
+    while not is_valid(move):
+        move = input('Player %s, enter move (for example, A0 B1 to move the piece at A0 to B1): ' % player).split(' ')
+    return move
+
 def ask_for_move(player, board):
     """Ask the player for a move, and move there, given a board."""
-    move = input('Player %s, enter move (for example, A0 B1 to move the piece at A0 to B1): ' % player).split(' ')
+    move = input_move(player)
     message = board.move(player, move[0], move[1])
-    while message is not None:
-        move = input(message + ' Please try again: ').split(' ')
+    while message != None:
+        print(message)
         message = board.move(player, move[0], move[1])
+        move = input_move(player)
 
 if __name__ == '__main__':
     players = input('Enter number of players (1 or 2): ')
