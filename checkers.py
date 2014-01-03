@@ -47,7 +47,7 @@ class Board:
 
     def render(self, player):
         """Returns an ASCII representation of the board."""
-        
+
         if player is Checker.PLAYER_TWO:
             s = '   A B C D E F G H \n'
             for n, row in enumerate(self.data):
@@ -60,7 +60,7 @@ class Board:
                 s += '  +-+-+-+-+-+-+-+-+\n'
                 s += ('\n|%s| %i' % ('|'.join([Checker.character(p) for p in row]), len(self.data)-n-1))[::-1]
         s += '  +-+-+-+-+-+-+-+-+'
-        s += '\n' + str(eval_game_state(self)) # temporary
+        s += '\nBest move result: ' + str(get_best_move(self)) # temporary
         return s
 
     def number_of_pieces(self, player):
@@ -268,7 +268,7 @@ if __name__ == '__main__':
     else:
         board = Board()
         while True:
-            print(board.render())
+            print(board.render(Checker.PLAYER_ONE))
             board = input_and_move(Checker.PLAYER_ONE, board)
-            print(board.render())
+            print(board.render(Checker.PLAYER_TWO))
             board = input_and_move(Checker.PLAYER_TWO, board)
