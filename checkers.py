@@ -206,24 +206,49 @@ def get_best_move(board, recurse_depth = 0, moves_so_far = []):
     moves = get_valid_moves(board, Checker.PLAYER_TWO)
     # now we should loop through them, and use recursion to keep getting moves.
     boards = []
+    #print('a',moves) #debug
     for m in moves:
         AI_moved_board = board.move(Checker.PLAYER_TWO, m[0], m[1])[1]
-        opponent_moves = get_valid_moves(AI_moved_board, Checker.PLAYER_ONE)
-        for o_m in opponent_moves:
-            opponent_moved_board = AI_moved_board.move(Checker.PLAYER_ONE, o_m[0], o_m[1])[1]
             # we've done a full move.
-            # now call `get_best_move` on the new board.
-            if recurse_depth >= 1: # make this bigger for more look-ahead
-                boards.append([opponent_moved_board, eval_game_state(opponent_moved_board)])
-            else:
-                copy_moves_so_far = moves_so_far[:]
-                copy_moves_so_far.append(m)
-                next_move = get_best_move(opponent_moved_board, recurse_depth + 1, copy_moves_so_far)
-                boards.append(next_move)
+            # now call `get_o_best_move` on the new board.
+        if recurse_depth >= 3: # make this bigger for more look-ahead
+            boards.append([AI_moved_board, eval_game_state(AI_moved_board)])
+        else:
+            copy_moves_so_far = moves_so_far[:]
+            copy_moves_so_far.append(m)
+            next_move = get_o_best_move(AI_moved_board, recurse_depth + 1, copy_moves_so_far)
+            boards.append(next_move)
+    if boards == []:
+        return [0,-1337]
     best_board = boards[0]
     for b in boards:
         if b[1] > best_board[1]: best_board = b
-    return b + moves_so_far
+    return best_board + moves_so_far
+
+def get_o_best_move(board, recurse_depth = 0, moves_so_far = []):
+    # first we need to get a list of valid moves.
+    moves = get_valid_moves(board, Checker.PLAYER_ONE)
+    # now we should loop through them, and use recursion to keep getting moves.
+    boards = []
+    #print('o',moves) #debug
+    for m in moves:
+        opponent_moved_board = board.move(Checker.PLAYER_ONE, m[0], m[1])[1]
+            # we've done a full move.
+            # now call `get_best_move` on the new board.
+        if recurse_depth >= 3: # make this bigger for more look-ahead
+            boards.append([opponent_moved_board, eval_game_state(opponent_moved_board)])
+        else:
+            copy_moves_so_far = moves_so_far[:]
+            copy_moves_so_far.append(m)
+            next_move = get_best_move(opponent_moved_board, recurse_depth + 1, copy_moves_so_far)
+            boards.append(next_move)
+    if boards == []:
+        return [0,1337]
+    best_board = boards[0]
+    for b in boards:
+        if b[1] < best_board[1]: best_board = b  #less than sign because human has opposite goal
+    return best_board + moves_so_far
+
 
 if __name__ == '__main__':
     players = input('Enter number of players (1 or 2): ')
