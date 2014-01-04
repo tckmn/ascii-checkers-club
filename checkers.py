@@ -198,22 +198,28 @@ def input_and_move(player, board):
     return board
 
 def eval_game_state(board):
-    # we're assuming player 1 is human and player 2 is AI.
-    if (board.number_of_pieces(Checker.PLAYER_ONE) == 0):
-        return 1337 # large value so that victory/defeat outweighs anything
-    if (board.number_of_pieces(Checker.PLAYER_TWO) == 0):
-        return -1337
-
+    has_player1 = False
+    has_player2 = False
     totalscore = 0
     for x in range(8):
         for y in range(8):
             if board.data[x][y] is not None:
                 piece = board.data[x][y]
                 # score the square
-                piecescore = round(max(abs(x - 3.5), abs(y - 3.5)) + .5)
+                piecescore = int(max(abs(x - 3.5), abs(y - 3.5)) + .5)
                 if (piece.king): piecescore = 5
-                if (piece.player == Checker.PLAYER_ONE): piecescore *= -1
+                if (piece.player == Checker.PLAYER_ONE):
+                    piecescore *= -1
+                    has_player1 = True
+                else:
+                    has_player2 = True
                 totalscore += piecescore
+
+    # we're assuming player 1 is human and player 2 is AI.
+    if not has_player1:
+        return 1337 # large value so that victory/defeat outweighs anything
+    if not has_player2:
+        return -1337
 
     return totalscore
 
