@@ -369,7 +369,7 @@ if __name__ == '__main__':
         while True:
             print(board.render(Checker.PLAYER_ONE))
             board = input_and_move(Checker.PLAYER_ONE, board)
-            print(board.render(Checker.PLAYER_TWO))
+            print(board.render(Checker.PLAYER_ONE))
             move = get_best_move(board)
             print(str(move))
             print(eval_game_state(board))
