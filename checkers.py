@@ -265,17 +265,17 @@ def get_valid_moves(board, player):
 
                     # captures
                     if y > 1 and x > 1 and board.data[x - 2][y - 2] is None:
-                        if is_capture(board, player, xy_to_coords(x, y), xy_to_coords(x - 1, y - 1)):
-                            moves.append([xy_to_coords(x, y), xy_to_coords(x - 1, y - 1)])
+                        if is_capture(board, player, xy_to_coords(x, y), xy_to_coords(x - 2, y - 2)):
+                            moves.append([xy_to_coords(x, y), xy_to_coords(x - 2, y - 2)])
                     if y < 6 and x < 6 and board.data[x + 2][y + 2] is None:
-                        if is_capture(board, player, xy_to_coords(x, y), xy_to_coords(x + 1, y + 1)):
-                            moves.append([xy_to_coords(x, y), xy_to_coords(x + 1, y + 1)])
+                        if is_capture(board, player, xy_to_coords(x, y), xy_to_coords(x + 2, y + 2)):
+                            moves.append([xy_to_coords(x, y), xy_to_coords(x + 2, y + 2)])
                     if y > 1 and x < 6 and board.data[x + 2][y - 2] is None:
-                        if is_capture(board, player, xy_to_coords(x, y), xy_to_coords(x + 1, y - 1)):
-                            moves.append([xy_to_coords(x, y), xy_to_coords(x + 1, y - 1)])
+                        if is_capture(board, player, xy_to_coords(x, y), xy_to_coords(x + 2, y - 2)):
+                            moves.append([xy_to_coords(x, y), xy_to_coords(x + 2, y - 2)])
                     if y < 6 and x > 1 and board.data[x - 2][y + 2] is None:
-                        if is_capture(board, player, xy_to_coords(x, y), xy_to_coords(x - 1, y + 1)):
-                            moves.append([xy_to_coords(x, y), xy_to_coords(x - 1, y + 1)])
+                        if is_capture(board, player, xy_to_coords(x, y), xy_to_coords(x - 2, y + 2)):
+                            moves.append([xy_to_coords(x, y), xy_to_coords(x - 2, y + 2)])
 
     return moves
 
