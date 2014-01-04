@@ -203,17 +203,21 @@ def eval_game_state(board):
     totalscore = 0
     for x in range(8):
         for y in range(8):
-            if board.data[x][y] is not None:
-                piece = board.data[x][y]
+            piece = board.data[x][y]
+            if piece is not None:
                 # score the square
-                piecescore = int(max(abs(x - 3.5), abs(y - 3.5)) + .5)
-                if (piece.king): piecescore = 5
-                if (piece.player == Checker.PLAYER_ONE):
-                    piecescore *= -1
+                if piece.player == Checker.PLAYER_ONE:
                     has_player1 = True
+                    if piece.king:
+                        totalscore -= 5
+                    else:
+                        totalscore -= max(abs(x - 3.5), abs(y - 3.5)) + .5
                 else:
                     has_player2 = True
-                totalscore += piecescore
+                    if piece.king:
+                        totalscore += 5
+                    else:
+                        totalscore += max(abs(x - 3.5), abs(y - 3.5)) + .5
 
     # we're assuming player 1 is human and player 2 is AI.
     if not has_player1:
@@ -355,7 +359,6 @@ def get_o_best_move(board, recurse_depth = 0, moves_so_far = [], minimum = -1337
     for b in boards:
         if b[1] < best_board[1]: best_board = b  #less than sign because human has opposite goal
     return best_board + moves_so_far
-
 
 if __name__ == '__main__':
     players = input('Enter number of players (0, 1, 2): ')
