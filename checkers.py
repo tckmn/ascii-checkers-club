@@ -309,7 +309,9 @@ def get_best_move(board, recurse_depth = 0, moves_so_far = [], maximum = 1337):
             # we've done a full move.
             # now call `get_o_best_move` on the new board.
         if recurse_depth >= 4: # make this bigger for more look-ahead
-            boards.append([AI_moved_board, eval_game_state(AI_moved_board)])
+            state_score = eval_game_state(AI_moved_board)
+            boards.append([AI_moved_board, state_score])
+            if state_score > maximum: return [AI_moved_board, state_score] + moves_so_far
         else:
             copy_moves_so_far = moves_so_far[:]
             copy_moves_so_far.append(m)
@@ -336,7 +338,10 @@ def get_o_best_move(board, recurse_depth = 0, moves_so_far = [], minimum = -1337
             # we've done a full move.
             # now call `get_best_move` on the new board.
         if recurse_depth >= 4: # make this bigger for more look-ahead
-            boards.append([opponent_moved_board, eval_game_state(opponent_moved_board)])
+            state_score = eval_game_state(opponent_moved_board)
+            boards.append([opponent_moved_board, state_score])
+            if state_score < minimum: return [opponent_moved_board, state_score] + moves_so_far
+                
         else:
             copy_moves_so_far = moves_so_far[:]
             copy_moves_so_far.append(m)
