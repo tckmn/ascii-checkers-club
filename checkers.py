@@ -66,16 +66,7 @@ class Board:
                 s += '  +-+-+-+-+-+-+-+-+\n'
                 s += ('\n|%s| %i' % ('|'.join([Checker.character(p) for p in row]), len(self.data)-n-1))[::-1]
         s += '  +-+-+-+-+-+-+-+-+'
-        #s += '\nBest move result: ' + str(get_best_move(self)) # temporary
         return s
-
-    def number_of_pieces(self, player):
-        p_count = 0
-        for row in self.data:
-            for p in row:
-                if p is not None and p.player == player:
-                    p_count += 1
-        return p_count
 
     def move(self, player, from_coords, to_coords):
         """
@@ -89,8 +80,6 @@ class Board:
         from_piece = self.data[from_x][from_y]
         to_piece = self.data[to_x][to_y]
 
-        # This was taking a RIDICULOUS amount of time
-        # board_copy = copy.deepcopy(self)
         board_copy = self.deepcopy()
 
         # first check to see if there's a piece in `from`
@@ -133,6 +122,7 @@ class Board:
 def comp_move(board, player, move):
 
     message = board.move(player, move[0], move[1])
+    
     board = message[1]
 
     # handle multiple jumps
@@ -309,22 +299,25 @@ def get_best_move(board, recurse_depth = 0, moves_so_far = [], maximum = 1337):
     #print('a',moves) #debug
     minimum = -1337
     for m in moves:
-        AI_moved_board = board.move(Checker.PLAYER_TWO, m[0], m[1])[1]
-            # we've done a full move.
-            # now call `get_o_best_move` on the new board.
+        AI_moved_board = board.deepcopy()
+        AI_moved_board = AI_moved_board.move(Checker.PLAYER_TWO, m[0], m[1])[1]
+        # we've done a full move.
+        # now call `get_o_best_move` on the new board.
         if recurse_depth >= 4: # make this bigger for more look-ahead
             state_score = eval_game_state(AI_moved_board)
+            if state_score >= maximum: return [AI_moved_board, state_score] + moves_so_far
             boards.append([AI_moved_board, state_score])
-            if state_score > maximum: return [AI_moved_board, state_score] + moves_so_far
         else:
             copy_moves_so_far = moves_so_far[:]
             copy_moves_so_far.append(m)
             next_move = get_o_best_move(AI_moved_board, recurse_depth + 1, copy_moves_so_far, minimum)
-            boards.append(next_move)
-            if next_move[1] > minimum: minimum = next_move[1]
-            if next_move[1] > maximum: return next_move + moves_so_far
+            if next_move[1] >= maximum: return next_move + moves_so_far
+            if next_move[1] >= minimum:
+                minimum = next_move[1]
+                boards.append(next_move)
     if boards == []:
-        return [0,-1337]
+        print(moves_so_far)
+        return [0,-1337] + moves_so_far
     best_board = boards[0]
     for b in boards:
         if b[1] > best_board[1]: best_board = b
@@ -338,23 +331,25 @@ def get_o_best_move(board, recurse_depth = 0, moves_so_far = [], minimum = -1337
     #print('o',moves) #debug
     maximum = 1337
     for m in moves:
-        opponent_moved_board = board.move(Checker.PLAYER_ONE, m[0], m[1])[1]
-            # we've done a full move.
-            # now call `get_best_move` on the new board.
+        opponent_moved_board = board.deepcopy()
+        opponent_moved_board = opponent_moved_board.move(Checker.PLAYER_ONE, m[0], m[1])[1]
+        # we've done a full move.
+        # now call `get_best_move` on the new board.
         if recurse_depth >= 4: # make this bigger for more look-ahead
             state_score = eval_game_state(opponent_moved_board)
+            if state_score <= minimum: return [opponent_moved_board, state_score] + moves_so_far
             boards.append([opponent_moved_board, state_score])
-            if state_score < minimum: return [opponent_moved_board, state_score] + moves_so_far
                 
         else:
             copy_moves_so_far = moves_so_far[:]
             copy_moves_so_far.append(m)
             next_move = get_best_move(opponent_moved_board, recurse_depth + 1, copy_moves_so_far, maximum)
-            boards.append(next_move)
-            if next_move[1] < maximum: maximum = next_move[1]
-            if next_move[1] < minimum: return next_move + moves_so_far
+            if next_move[1] <= minimum: return next_move + moves_so_far
+            if next_move[1] <= maximum:
+                maximum = next_move[1]
+                boards.append(next_move)
     if boards == []:
-        return [0,1337]
+        return [0,1337] + moves_so_far
     best_board = boards[0]
     for b in boards:
         if b[1] < best_board[1]: best_board = b  #less than sign because human has opposite goal
@@ -369,29 +364,41 @@ if __name__ == '__main__':
         board = Board()
         while True:
             print(board.render(Checker.PLAYER_ONE))
+            if len(get_valid_moves(board, Checker.PLAYER_ONE)) is 0:
+                print('Player 2 wins')
+                break
             move = get_o_best_move(board)
-            print(str(move))
-            print(eval_game_state(board))
             board = comp_move(board, Checker.PLAYER_ONE, move[len(move)-1])
             print(board.render(Checker.PLAYER_ONE))  #disabled board rotation
+            if len(get_valid_moves(board, Checker.PLAYER_TWO)) is 0:
+                print('Player 1 wins')
+                break
             move = get_best_move(board)
-            print(str(move))
-            print(eval_game_state(board))
             board = comp_move(board, Checker.PLAYER_TWO, move[len(move)-1])
-    if players == '1':
+    elif players == '1':
         board = Board()
         while True:
             print(board.render(Checker.PLAYER_ONE))
+            if len(get_valid_moves(board, Checker.PLAYER_ONE)) is 0:
+                print('Player 2 wins')
+                break
             board = input_and_move(Checker.PLAYER_ONE, board)
             print(board.render(Checker.PLAYER_ONE))
+            if len(get_valid_moves(board, Checker.PLAYER_TWO)) is 0:
+                print('Player 1 wins')
+                break
             move = get_best_move(board)
-            print(str(move))
-            print(eval_game_state(board))
             board = comp_move(board, Checker.PLAYER_TWO, move[len(move)-1])
     else:
         board = Board()
         while True:
             print(board.render(Checker.PLAYER_ONE))
+            if len(get_valid_moves(board, Checker.PLAYER_ONE)) is 0:
+                print('Player 2 wins')
+                break
             board = input_and_move(Checker.PLAYER_ONE, board)
             print(board.render(Checker.PLAYER_TWO))
+            if len(get_valid_moves(board, Checker.PLAYER_TWO)) is 0:
+                print('Player 1 wins')
+                break
             board = input_and_move(Checker.PLAYER_TWO, board)
